@@ -1,0 +1,14 @@
+{
+    "batch_size": 32,
+    "colname_def": "DEFINITION",
+    "colname_ex": "EXAMPLE",
+    "colname_word": "WORD",
+    "log_steps": 2000,
+    "lr": 5e-5,
+    "max_length": 96,
+    "model_name": "facebook/opt-2.7b",
+    "num_epochs": 1,
+    "num_virtual_tokens": 4,
+    "train_file": "data/CHA_train.csv",
+    "val_file": "data/CHA_valid.csv"
+}
