@@ -2,7 +2,7 @@
 
 #SBATCH --account=project_2007780
 #SBATCH --job-name=train
-#SBATCH --output=./iostreams/%j_%x.out
+#SBATCH --output=./io/%j_%x.out
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:1
 #SBATCH --ntasks=1
