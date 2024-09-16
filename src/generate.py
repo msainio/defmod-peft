@@ -61,7 +61,7 @@ def main():
         config = json.load(config_file)
     
     # Instantiate PEFT model and tokenizer
-    model = load_model(config["model_name"])
+    model = load_model(config["model_path"])
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     tokenizer = AutoTokenizer.from_pretrained(config["model_name"])
 
