@@ -1,0 +1,16 @@
+{
+    "batch_size": 32,
+    "colname_def": "DEFINITION",
+    "colname_ex": "EXAMPLE",
+    "colname_word": "WORD",
+    "do_sample": 1,
+    "length_penalty": 0.9,
+    "max_length": 96,
+    "max_new_tokens": 16,
+    "model_path": "./models/22628209_train",
+    "repetition_penalty": 0.9,
+    "temperature": 0.9,
+    "test_file": "data/CHA_test.csv",
+    "top_k": 50,
+    "top_p": 0.9
+}

@@ -5,7 +5,6 @@ import json
 import logging
 import os
 from peft import get_peft_model, PrefixTuningConfig, TaskType
-import socket
 import torch
 from torch.optim import AdamW
 from torch.utils.tensorboard import SummaryWriter

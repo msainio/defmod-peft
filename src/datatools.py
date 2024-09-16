@@ -51,7 +51,7 @@ def _prepare_dataset(
             pin_memory=pin_memory,
             shuffle=shuffle,
             )
-    return dataloader
+    return dataloader, data
 
 def prepare_datasets(config, num_workers, pin_memory, tokenizer):
     shared_kwargs = {
@@ -64,8 +64,23 @@ def prepare_datasets(config, num_workers, pin_memory, tokenizer):
             "pin_memory": pin_memory,
             "tokenizer": tokenizer,
             }
-    train_set = _prepare_dataset(
+    train_loader, _ = _prepare_dataset(
             filepath=config["train_file"], shuffle=True, **shared_kwargs)
-    val_set = _prepare_dataset(
+    val_loader, _ = _prepare_dataset(
             filepath=config["val_file"], shuffle=False, **shared_kwargs)
-    return train_set, val_set
+    return train_loader, val_loader
+
+def prepare_test_set(config, num_workers, pin_memory, tokenizer):
+    kwargs = {
+            "batch_size": config["batch_size"],
+            "max_length": config["max_length"],
+            "colname_def": config["colname_def"],
+            "colname_ex": config["colname_ex"],
+            "colname_word": config["colname_word"],
+            "num_workers": num_workers,
+            "pin_memory": pin_memory,
+            "tokenizer": tokenizer,
+            }
+    test_loader, test_data = _prepare_dataset(
+            filepath=config["test_file"], shuffle=False, **kwargs)
+    return test_loader, test_data
