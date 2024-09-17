@@ -9,8 +9,9 @@
     "log_steps": 100,
     "low_memory": 0,
     "max_length": 96,
-    "max_new_tokens": 16,
+    "max_new_tokens": 32,
     "num_beams": 1,
     "peft_model": "./models/22628209_train",
+    "temperature": 0.9,
     "test_file": "data/CHA_test.csv"
 }

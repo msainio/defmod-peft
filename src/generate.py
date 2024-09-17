@@ -21,7 +21,8 @@ def load_model(model_name):
 @torch.no_grad
 def run_generation(
         device, do_sample, early_stopping, log_steps, low_memory,
-        max_new_tokens, model, num_beams, test_loader, tokenizer):
+        max_new_tokens, model, num_beams, repetition_penalty, temperature,
+        test_loader, tokenizer):
     gen_start = datetime.now()
     logger.info("Generation started")
     model.eval()
@@ -37,6 +38,8 @@ def run_generation(
             low_memory=low_memory,
             max_new_tokens=max_new_tokens,
             num_beams=num_beams,
+            repetition_penalty=repetition_penalty,
+            temperature=temperature,
             )
         decoded_outputs = tokenizer.batch_decode(
             outputs.detach().cpu().numpy(),
@@ -95,6 +98,8 @@ def main():
         max_new_tokens=config["max_new_tokens"],
         model=model,
         num_beams=config["num_beams"],
+        repetition_penalty=config["repetition_penalty"],
+        temperature=config["temperature"],
         test_loader=test_loader,
         tokenizer=tokenizer,
         )
