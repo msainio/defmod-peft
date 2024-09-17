@@ -11,5 +11,5 @@
     "peft_model": "./models/22628209_train",
     "repetition_penalty": 0.5,
     "temperature": 1.0,
-    "test_file": "data/CHA_test.csv"
+    "test_file": "data/CHA_test_mini.csv"
 }

@@ -20,27 +20,24 @@ def load_model(model_name):
 
 @torch.no_grad
 def run_generation(
-        device, do_sample, length_penalty, max_new_tokens, model,
-        repetition_penalty, temperature, test_loader, tokenizer, top_k,
-        top_p):
+        device, do_sample, max_new_tokens, model, num_beams,
+        repetition_penalty, temperature, test_loader, tokenizer):
     model.eval()
     preds = []
     for batch in test_loader:
-        inp, att = (x.to(device) for x in batch)
+        inp = batch[0].to(device)
         outputs = model.generate(
             do_sample=do_sample,
             input_ids=inp,
-            length_penalty=length_penalty,
             max_new_tokens=max_new_tokens,
+            num_beams=num_beams,
             repetition_penalty=repetition_penalty,
             temperature=temperature,
-            top_k=top_k,
-            top_p=top_p,
             )
         decoded_outputs = tokenizer.batch_decode(
             outputs.detach().cpu().numpy(),
             skip_special_tokens=True)
-        preds.append(decoded_outputs)
+        preds += decoded_outputs
     return preds
 
 def main():
@@ -61,9 +58,10 @@ def main():
         config = json.load(config_file)
     
     # Instantiate PEFT model and tokenizer
-    model = load_model(config["model_path"])
+    model = load_model(config["peft_model"])
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
-    tokenizer = AutoTokenizer.from_pretrained(config["model_name"])
+    tokenizer = AutoTokenizer.from_pretrained(config["base_model"],
+            padding_side="left")
 
     # Prepare data for generation
     num_workers = int(os.environ["SLURM_CPUS_PER_TASK"])
@@ -83,15 +81,13 @@ def main():
     preds = run_generation(
         device=device,
         do_sample=True if config["do_sample"] else False,
-        length_penalty=config["length_penalty"],
         max_new_tokens=config["max_new_tokens"],
         model=model,
+        num_beams=config["num_beams"],
         repetition_penalty=config["repetition_penalty"],
         temperature=config["temperature"],
         test_loader=test_loader,
         tokenizer=tokenizer,
-        top_k=config["top_k"],
-        top_p=config["top_p"],
         )
 
     # Write predictions to file
