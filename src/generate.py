@@ -20,24 +20,32 @@ def load_model(model_name):
 
 @torch.no_grad
 def run_generation(
-        device, do_sample, max_new_tokens, model, num_beams,
-        repetition_penalty, temperature, test_loader, tokenizer):
+        device, do_sample, early_stopping, log_steps, low_memory,
+        max_new_tokens, model, num_beams, test_loader, tokenizer):
+    gen_start = datetime.now()
+    logger.info("Generation started")
     model.eval()
     preds = []
-    for batch in test_loader:
+    for step, batch in enumerate(test_loader):
         inp = batch[0].to(device)
+        att = batch[1].to(device)
         outputs = model.generate(
+            attention_mask=att,
             do_sample=do_sample,
+            early_stopping=early_stopping,
             input_ids=inp,
+            low_memory=low_memory,
             max_new_tokens=max_new_tokens,
             num_beams=num_beams,
-            repetition_penalty=repetition_penalty,
-            temperature=temperature,
             )
         decoded_outputs = tokenizer.batch_decode(
             outputs.detach().cpu().numpy(),
             skip_special_tokens=True)
         preds += decoded_outputs
+        if (step + 1) % log_steps == 0 or (step + 1) == len(test_loader):
+                logger.info(f"{step + 1}/{len(test_loader)}")
+    logger.info("Generation finished in" + " "
+            + str(datetime.now() - gen_start))
     return preds
 
 def main():
@@ -56,7 +64,7 @@ def main():
     args = parser.parse_args()
     with open(args.config) as config_file:
         config = json.load(config_file)
-    
+
     # Instantiate PEFT model and tokenizer
     model = load_model(config["peft_model"])
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -81,18 +89,19 @@ def main():
     preds = run_generation(
         device=device,
         do_sample=True if config["do_sample"] else False,
+        early_stopping=True if config["early_stopping"] else False,
+        log_steps=config["log_steps"],
+        low_memory=True if config["low_memory"] else False,
         max_new_tokens=config["max_new_tokens"],
         model=model,
         num_beams=config["num_beams"],
-        repetition_penalty=config["repetition_penalty"],
-        temperature=config["temperature"],
         test_loader=test_loader,
         tokenizer=tokenizer,
         )
 
     # Write predictions to file
     test_data["PREDICTION"] = preds
-    outfile=f"./preds/{job_id}_{job_name}.csv"
+    outfile=f"preds/{job_id}_{job_name}.csv"
     test_data.to_csv(outfile)
     logger.info(f"Predictions saved to '{outfile}'")
  

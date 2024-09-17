@@ -5,11 +5,12 @@
     "colname_ex": "EXAMPLE",
     "colname_word": "WORD",
     "do_sample": 1,
+    "early_stopping": 0,
+    "log_steps": 10,
+    "low_memory": 0,
     "max_length": 96,
     "max_new_tokens": 16,
     "num_beams": 1,
     "peft_model": "./models/22628209_train",
-    "repetition_penalty": 0.5,
-    "temperature": 1.0,
     "test_file": "data/CHA_test_mini.csv"
 }

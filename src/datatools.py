@@ -17,7 +17,7 @@ def _get_test_texts(colname_ex, colname_word, data):
     str_data = data.map(lambda x: str(x))
     input_texts = (
             str_data[colname_ex] + " What is the definition of " +
-            str_data[colname_word] + "? "
+            str_data[colname_word] + "?"
             ).to_list()
     return input_texts
 
