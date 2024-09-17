@@ -12,6 +12,7 @@
     "max_new_tokens": 32,
     "num_beams": 1,
     "peft_model": "./models/22628209_train",
+    "repetition_penalty": 1.1,
     "temperature": 0.9,
     "test_file": "data/CHA_test.csv"
 }
