@@ -66,7 +66,7 @@ def main():
     # Prepare data for generation
     num_workers = int(os.environ["SLURM_CPUS_PER_TASK"])
     pin_memory = torch.cuda.is_available()
-    test_loader, test_data = prepare_test_set(
+    test_data, test_loader = prepare_test_set(
             config=config,
             num_workers=num_workers,
             pin_memory=pin_memory,
