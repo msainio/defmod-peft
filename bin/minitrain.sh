@@ -2,7 +2,7 @@
 
 #SBATCH --account=project_2007780
 #SBATCH --job-name=minitrain
-#SBATCH --output=./io/%j_%x.out
+#SBATCH --output=./io/%j-%x.out
 #SBATCH --partition=gputest
 #SBATCH --gres=gpu:v100:1
 #SBATCH --ntasks=1

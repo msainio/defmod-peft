@@ -77,9 +77,9 @@ def main():
     job_id = os.environ["SLURM_JOB_ID"]
     job_name = os.environ["SLURM_JOB_NAME"]
     logging.basicConfig(
-            filename=f"logs/{job_id}_{job_name}.log",
+            filename=f"logs/{job_id}-{job_name}.log",
             level=logging.INFO)
-    logger.info(f"{job_id}_{job_name}")
+    logger.info(f"{job_id}-{job_name}")
 
     # Load program configuration from file
     parser = argparse.ArgumentParser()
@@ -118,7 +118,7 @@ def main():
     peft_model.to(device)
     optimizer = AdamW(peft_model.parameters(), lr=config["lr"])
 
-    writer = SummaryWriter(log_dir=f"runs/{job_id}_{job_name}")
+    writer = SummaryWriter(log_dir=f"runs/{job_id}-{job_name}")
     run_training(
             device=device,
             log_steps=config["log_steps"],
@@ -132,7 +132,7 @@ def main():
             )
     writer.close()
 
-    save_dir = f"models/{job_id}_{job_name}"
+    save_dir = f"models/{job_id}-{job_name}"
     peft_model.save_pretrained(save_dir)
     logger.info(f"PEFT model saved to '{save_dir}'")
     

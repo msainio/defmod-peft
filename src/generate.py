@@ -56,9 +56,9 @@ def main():
     job_id = os.environ["SLURM_JOB_ID"]
     job_name = os.environ["SLURM_JOB_NAME"]
     logging.basicConfig(
-            filename=f"logs/{job_id}_{job_name}.log",
+            filename=f"logs/{job_id}-{job_name}.log",
             level=logging.INFO)
-    logger.info(f"{job_id}_{job_name}")
+    logger.info(f"{job_id}-{job_name}")
 
     # Load program configuration from file
     parser = argparse.ArgumentParser()
@@ -106,7 +106,7 @@ def main():
 
     # Write predictions to file
     test_data["PREDICTION"] = preds
-    outfile=f"preds/{job_id}_{job_name}.csv"
+    outfile=f"preds/{job_id}-{job_name}.csv"
     test_data.to_csv(outfile)
     logger.info(f"Predictions saved to '{outfile}'")
  
