@@ -3,6 +3,7 @@
     "batch_size": 32,
     "colname_def": "DEFINITION",
     "colname_ex": "EXAMPLE",
+    "colname_pred": "PREDICTION",
     "colname_word": "WORD",
     "do_sample": 1,
     "early_stopping": 0,

@@ -1,3 +1,5 @@
+#!/bin/env python3
+
 import argparse
 from datatools import prepare_test_set
 from datetime import datetime
@@ -105,7 +107,7 @@ def main():
         )
 
     # Write predictions to file
-    test_data["PREDICTION"] = preds
+    test_data[config["colname_pred"]] = preds
     outfile=f"preds/{job_id}-{job_name}.csv"
     test_data.to_csv(outfile)
     logger.info(f"Predictions saved to '{outfile}'")

@@ -1,3 +1,5 @@
+#!/bin/env python3
+
 import argparse
 from datatools import prepare_datasets
 from datetime import datetime
