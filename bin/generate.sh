@@ -8,7 +8,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
 #SBATCH --mem-per-cpu=2G
-#SBATCH --time=120
+#SBATCH --time=0-4
 #SBATCH --mail-type=ALL
 
 module purge
