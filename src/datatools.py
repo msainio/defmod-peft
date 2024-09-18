@@ -8,16 +8,16 @@ logger = logging.getLogger(__name__)
 def _get_input_texts(colname_def, colname_ex, colname_word, data):
     str_data = data.map(lambda x: str(x))
     input_texts = (
-            str_data[colname_ex] + " What is the definition of " +
-            str_data[colname_word] + "? " + str_data[colname_def]
+            str_data[colname_ex] + " " + "What is the definition of" + " "
+            + str_data[colname_word] + "?" + " " + str_data[colname_def]
             ).to_list()
     return input_texts
 
 def _get_test_texts(colname_ex, colname_word, data):
     str_data = data.map(lambda x: str(x))
     input_texts = (
-            str_data[colname_ex] + " What is the definition of " +
-            str_data[colname_word] + "?"
+            str_data[colname_ex] + " " + "What is the definition of" + " "
+            + str_data[colname_word] + "?"
             ).to_list()
     return input_texts
 
