@@ -5,6 +5,7 @@
     "colname_ex": "EXAMPLE",
     "colname_pred": "PREDICTION",
     "colname_word": "WORD",
+    "do_eval": 0,
     "do_sample": 1,
     "early_stopping": 0,
     "log_steps": 10,
