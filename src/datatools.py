@@ -18,7 +18,7 @@ def _get_input_texts(
         # Exclude target gloss from test inputs
         input_texts = (
                 str_data[colname_ex] + " " + "What is the definition of" + " "
-                + str_data[colname_word] + "?" + eos_token
+                + str_data[colname_word] + "?" + " "
                 )
     return input_texts.to_list()
 
@@ -70,7 +70,7 @@ def prepare_datasets(config, num_workers, pin_memory, tokenizer):
             "colname_def": config["colname_def"],
             "colname_ex": config["colname_ex"],
             "colname_word": config["colname_word"],
-            "do_eval": config["do_eval"]
+            "do_eval": config["do_eval"],
             "max_length": config["max_length"],
             "num_workers": num_workers,
             "pin_memory": pin_memory,

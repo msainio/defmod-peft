@@ -12,6 +12,7 @@
 #SBATCH --mail-type=ALL
 
 module purge
-module load pytorch
+module load pytorch/2.4
+export HF_HOME=".cache/huggingface"
 
 srun python3 src/train.py --config config/train.json

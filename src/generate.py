@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 
 import argparse
 from datatools import prepare_test_set
@@ -73,8 +73,8 @@ def main():
     # Instantiate PEFT model and tokenizer
     model = load_model(config["peft_model"])
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
-    tokenizer = AutoTokenizer.from_pretrained(config["base_model"],
-            padding_side="left")
+    tokenizer = AutoTokenizer.from_pretrained(
+            config["base_model"], padding_side="left")
 
     # Prepare data for generation
     num_workers = int(os.environ["SLURM_CPUS_PER_TASK"])

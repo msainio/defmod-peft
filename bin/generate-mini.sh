@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --account=project_2007780
-#SBATCH --job-name=minigenerate
+#SBATCH --job-name=generate-mini
 #SBATCH --output=./io/%j-%x.out
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:1
@@ -13,5 +13,6 @@
 
 module purge
 module load pytorch
+export HF_HOME=".cache/huggingface"
 
-srun python3 src/generate.py --config config/minigenerate.json
+srun python3 src/generate.py --config config/generate-mini.json

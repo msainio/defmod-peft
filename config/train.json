@@ -10,6 +10,6 @@
     "model_name": "facebook/opt-2.7b",
     "num_epochs": 1,
     "num_virtual_tokens": 4,
-    "train_file": "data/CHA_train.csv",
-    "val_file": "data/CHA_valid.csv"
+    "train_file": "data/cha/CHA_train.csv",
+    "val_file": "data/cha/CHA_valid.csv"
 }

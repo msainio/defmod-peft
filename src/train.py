@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 
 import argparse
 from datatools import prepare_datasets
@@ -92,7 +92,6 @@ def main():
         config = json.load(config_file)
     
     # Instantiate base model and tokenizer
-    # TODO: Get to work with OLMo
     base_model = load_model(config["model_name"])
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     tokenizer = AutoTokenizer.from_pretrained(config["model_name"])

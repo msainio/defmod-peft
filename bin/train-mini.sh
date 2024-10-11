@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --account=project_2007780
-#SBATCH --job-name=minitrain
+#SBATCH --job-name=train-mini
 #SBATCH --output=./io/%j-%x.out
 #SBATCH --partition=gputest
 #SBATCH --gres=gpu:v100:1
@@ -13,5 +13,6 @@
 
 module purge
 module load pytorch
+export HF_HOME=".cache/huggingface"
 
-srun python3 src/train.py --config config/minitrain.json
+srun python3 src/train.py --config config/train_mini.json

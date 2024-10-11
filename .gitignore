@@ -1,8 +1,9 @@
-__pycache__
-data
-io
-logs
-models
-preds
-results
-runs
+/.cache
+/data
+/io
+/logs
+/models
+/preds
+/results
+/runs
+/src/__pycache__
