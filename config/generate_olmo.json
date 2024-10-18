@@ -1,0 +1,20 @@
+{
+    "base_model": "allenai/OLMo-1B-hf",
+    "batch_size": 32,
+    "colname_def": "gloss",
+    "colname_ex": "example",
+    "colname_pred": "pred",
+    "colname_word": "word",
+    "do_eval": 1,
+    "do_sample": 1,
+    "early_stopping": 0,
+    "log_steps": 200,
+    "low_memory": 0,
+    "max_length": 96,
+    "max_new_tokens": 32,
+    "num_beams": 1,
+    "peft_model": "models/23856335-train-olmo",
+    "repetition_penalty": 1.0,
+    "temperature": 1.0,
+    "test_file": "data/codwoe/test.csv"
+}

@@ -1,0 +1,15 @@
+{
+    "batch_size": 32,
+    "colname_def": "gloss",
+    "colname_ex": "example",
+    "colname_word": "word",
+    "do_eval": 0,
+    "log_steps": 50,
+    "lr": 5e-5,
+    "max_length": 96,
+    "model_name": "allenai/OLMo-1B-hf",
+    "num_epochs": 1,
+    "num_virtual_tokens": 4,
+    "train_file": "data/codwoe/train_mini.csv",
+    "val_file": "data/codwoe/val_mini.csv"
+}

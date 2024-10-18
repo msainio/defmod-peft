@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --account=project_2007780
-#SBATCH --job-name=train
+#SBATCH --job-name=train-opt
 #SBATCH --output=./io/%j-%x.out
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:1
@@ -15,4 +15,4 @@ module purge
 module load pytorch/2.4
 export HF_HOME=".cache/huggingface"
 
-srun python3 src/train.py --config config/train.json
+srun python3 src/train.py --config config/train_opt.json
