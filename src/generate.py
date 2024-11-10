@@ -45,7 +45,8 @@ def run_generation(
             )
         decoded_outputs = tokenizer.batch_decode(
             outputs.detach().cpu().numpy(),
-            skip_special_tokens=True)
+            skip_special_tokens=True,
+            )
         preds += decoded_outputs
         if (step + 1) % log_steps == 0 or (step + 1) == len(test_loader):
                 logger.info(f"{step + 1}/{len(test_loader)}")
@@ -69,6 +70,8 @@ def main():
     args = parser.parse_args()
     with open(args.config) as config_file:
         config = json.load(config_file)
+    for key, val in config.items():
+        logger.info(f"{key}: {val}")
 
     # Instantiate PEFT model and tokenizer
     model = load_model(config["peft_model"])

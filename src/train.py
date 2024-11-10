@@ -90,6 +90,8 @@ def main():
     args = parser.parse_args()
     with open(args.config) as config_file:
         config = json.load(config_file)
+    for key, val in config.items():
+        logger.info(f"{key}: {val}")
     
     # Instantiate base model and tokenizer
     base_model = load_model(config["model_name"])
