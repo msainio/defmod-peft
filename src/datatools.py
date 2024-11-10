@@ -9,16 +9,16 @@ def _get_input_texts(
         colname_def, colname_ex, colname_word, data, do_eval, eos_token):
     str_data = data.map(lambda x: str(x))
     if do_eval:
+        # Exclude target gloss from test inputs
+        input_texts = (
+                str_data[colname_ex] + " " + "What is the definition of" + " "
+                + str_data[colname_word] + "?"
+                )
+    else:
         input_texts = (
                 str_data[colname_ex] + " " + "What is the definition of" + " "
                 + str_data[colname_word] + "?" + " " + str_data[colname_def]
                 + eos_token
-                )
-    else:
-        # Exclude target gloss from test inputs
-        input_texts = (
-                str_data[colname_ex] + " " + "What is the definition of" + " "
-                + str_data[colname_word] + "?" + " "
                 )
     return input_texts.to_list()
 
