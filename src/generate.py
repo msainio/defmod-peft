@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-from data import prepare_datasets
+from datautils import prepare_datasets
 from datetime import datetime
 import json
 import logging

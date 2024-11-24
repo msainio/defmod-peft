@@ -17,4 +17,4 @@ export HF_HOME=".cache/huggingface"
 
 srun python3 src/generate.py \
     --data_config config/data/dbnary.json \
-    --task_config config/fingpt/generate_fingpt.json
+    --task_config config/experiments/generate_fingpt.json
