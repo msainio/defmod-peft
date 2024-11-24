@@ -96,6 +96,11 @@ def main():
     for key, val in task_config.items():
         logger.info(f"{key}: {val}")  # log hyperparams
     config = {**data_config, **task_config}
+
+    # Set paths
+    model_save_dir = f"models/{job_id}-{job_name}"
+    prompt_templates_path = "config/prompt_templates.json"
+    tensorboard_log_dir = f"runs/{job_id}-{job_name}"
     
     # Instantiate base model and tokenizer
     base_model = load_model(task_config["model_name"])
@@ -105,7 +110,7 @@ def main():
     # Prepare data for training
     num_workers = int(os.environ["SLURM_CPUS_PER_TASK"])
     pin_memory = torch.cuda.is_available()
-    with open("config/prompt_templates.json") as prompt_templates_file:
+    with open(prompt_templates_path) as prompt_templates_file:
         prompt_templates = json.load(prompt_templates_file)
     train_loader, val_loader = prepare_datasets(
             config=config,
@@ -129,7 +134,7 @@ def main():
     peft_model.to(device)
     optimizer = AdamW(peft_model.parameters(), lr=config["lr"])
 
-    writer = SummaryWriter(log_dir=f"runs/{job_id}-{job_name}")
+    writer = SummaryWriter(log_dir=tensorboard_log_dir)
     run_training(
             device=device,
             log_steps=config["log_steps"],
@@ -142,9 +147,8 @@ def main():
             )
     writer.close()
 
-    save_dir = f"models/{job_id}-{job_name}"
-    peft_model.save_pretrained(save_dir)
-    logger.info(f"PEFT model saved to '{save_dir}'")
+    peft_model.save_pretrained(model_save_dir)
+    logger.info(f"PEFT model saved to '{model_save_dir}'")
     
 if __name__ == "__main__":
     main()

@@ -3,7 +3,7 @@
     "colname_ex": "ex",
     "colname_pred": "pred",
     "colname_word": "word",
-    "prompt_lang": "fi",
+    "data_lang": "fi",
     "test_file": "data/dbnary/dbnary_fi_test.csv",
     "train_file": "data/dbnary/dbnary_fi_train.csv",
     "val_file": "data/dbnary/dbnary_fi_val.csv"

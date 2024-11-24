@@ -3,7 +3,7 @@
     "colname_ex": "example",
     "colname_pred": "prediction",
     "colname_word": "word",
-    "prompt_lang": "en",
+    "data_lang": "en",
     "test_file": "data/codwoe/test_mini.csv",
     "train_file": "data/codwoe/train_mini.csv",
     "val_file": "data/codwoe/val_mini.csv"

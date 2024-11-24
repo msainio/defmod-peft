@@ -3,7 +3,7 @@
     "colname_ex": "EXAMPLE",
     "colname_pred": "PREDICTION",
     "colname_word": "WORD",
-    "prompt_lang": "en",
+    "data_lang": "en",
     "test_file": "data/cha/CHA_test_mini.csv",
     "train_file": "data/cha/CHA_train_mini.csv",
     "val_file": "data/cha/CHA_valid_mini.csv"

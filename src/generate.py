@@ -77,6 +77,10 @@ def main():
         logger.info(f"{key}: {val}")
     config = {**data_config, **task_config}
 
+    # Set paths
+    preds_path=f"preds/{job_id}-{job_name}.csv"
+    prompt_templates_path = "config/prompt_templates.json"
+
     # Instantiate PEFT model and tokenizer
     model = load_model(config["peft_model"])
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -86,7 +90,7 @@ def main():
     # Prepare data for generation
     num_workers = int(os.environ["SLURM_CPUS_PER_TASK"])
     pin_memory = torch.cuda.is_available()
-    with open("config/prompt_templates.json") as prompt_templates_file:
+    with open(prompt_templates_path) as prompt_templates_file:
         prompt_templates = json.load(prompt_templates_file)
     test_data, test_loader = prepare_datasets(
             config=config,
@@ -118,9 +122,8 @@ def main():
 
     # Write predictions to file
     test_data[config["colname_pred"]] = preds
-    outfile=f"preds/{job_id}-{job_name}.csv"
-    test_data.to_csv(outfile)
-    logger.info(f"Predictions saved to '{outfile}'")
+    test_data.to_csv(preds_path)
+    logger.info(f"Predictions saved to '{preds_path}'")
  
 if __name__ == "__main__":
     main()
