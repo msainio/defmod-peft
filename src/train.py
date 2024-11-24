@@ -105,10 +105,13 @@ def main():
     # Prepare data for training
     num_workers = int(os.environ["SLURM_CPUS_PER_TASK"])
     pin_memory = torch.cuda.is_available()
+    with open("config/prompt_templates.json") as prompt_templates_file:
+        prompt_templates = json.load(prompt_templates_file)
     train_loader, val_loader = prepare_datasets(
             config=config,
             num_workers=num_workers,
             pin_memory=pin_memory,
+            prompt_templates=prompt_templates,
             tokenizer=tokenizer,
             )
 

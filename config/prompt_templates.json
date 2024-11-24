@@ -1,0 +1,10 @@
+{
+    "en": {
+        "generate": "{example} What is the definition of {word}?",
+        "train": "{example} What is the definition of {word}? {definition}"
+    },
+    "fi": {
+        "generate": "{example} Mikä on sanan {word} määritelmä?",
+        "train": "{example} Mikä on sanan {word} määritelmä? {definition}"
+    }
+}
