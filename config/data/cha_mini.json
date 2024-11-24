@@ -1,15 +1,10 @@
 {
-    "batch_size": 32,
     "colname_def": "DEFINITION",
     "colname_ex": "EXAMPLE",
+    "colname_pred": "PREDICTION",
     "colname_word": "WORD",
-    "do_eval": 0,
-    "log_steps": 50,
-    "lr": 5e-5,
-    "max_length": 96,
-    "model_name": "facebook/opt-125m",
-    "num_epochs": 1,
-    "num_virtual_tokens": 4,
+    "prompt_lang": "en",
+    "test_file": "data/cha/CHA_test_mini.csv",
     "train_file": "data/cha/CHA_train_mini.csv",
     "val_file": "data/cha/CHA_valid_mini.csv"
 }

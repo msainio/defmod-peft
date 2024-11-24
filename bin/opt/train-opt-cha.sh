@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --account=project_2007780
-#SBATCH --job-name=train-olmo
+#SBATCH --job-name=train-opt-cha
 #SBATCH --output=./io/%j-%x.out
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:1
@@ -12,7 +12,9 @@
 #SBATCH --mail-type=ALL
 
 module purge
-module load pytorch/2.3
+module load pytorch/2.4
 export HF_HOME=".cache/huggingface"
 
-srun python3 src/train.py --config config/train_olmo.json
+srun python3 src/train.py \
+    --data_config config/data/cha.json \
+    --task_config config/opt/train_opt.json

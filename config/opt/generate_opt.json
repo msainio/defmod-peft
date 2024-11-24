@@ -1,10 +1,6 @@
 {
     "base_model": "facebook/opt-2.7b",
     "batch_size": 32,
-    "colname_def": "DEFINITION",
-    "colname_ex": "EXAMPLE",
-    "colname_pred": "PREDICTION",
-    "colname_word": "WORD",
     "do_eval": 1,
     "do_sample": 1,
     "early_stopping": 0,
@@ -13,8 +9,7 @@
     "max_length": 96,
     "max_new_tokens": 32,
     "num_beams": 1,
-    "peft_model": "models/23792917-train-opt",
+    "peft_model": "models/24205379-train-opt",
     "repetition_penalty": 1.0,
-    "temperature": 1.0,
-    "test_file": "data/cha/CHA_test.csv"
+    "temperature": 1.0
 }

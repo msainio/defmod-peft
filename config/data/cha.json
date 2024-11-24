@@ -1,0 +1,10 @@
+{
+    "colname_def": "DEFINITION",
+    "colname_ex": "EXAMPLE",
+    "colname_pred": "PREDICTION",
+    "colname_word": "WORD",
+    "prompt_lang": "en",
+    "test_file": "data/cha/CHA_test.csv",
+    "train_file": "data/cha/CHA_train.csv",
+    "val_file": "data/cha/CHA_valid.csv"
+}

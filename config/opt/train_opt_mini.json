@@ -1,0 +1,10 @@
+{
+    "batch_size": 32,
+    "do_eval": 0,
+    "log_steps": 50,
+    "lr": 5e-5,
+    "max_length": 96,
+    "model_name": "facebook/opt-125m",
+    "num_epochs": 1,
+    "num_virtual_tokens": 4
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-from datatools import prepare_datasets
+from data import prepare_datasets
 from datetime import datetime
 import json
 import logging
@@ -40,7 +40,7 @@ def run_eval(model, val_loader, device, total_loss, train_loader):
     return train_epoch_loss, train_ppl, val_epoch_loss, val_ppl
 
 def run_training(
-        device, log_steps, lr, model, optimizer, num_epochs, train_loader,
+        device, log_steps, model, optimizer, num_epochs, train_loader,
         val_loader, writer):
     train_start = datetime.now()
     logger.info("Training started")
@@ -85,16 +85,20 @@ def main():
 
     # Load program configuration from file
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-            "--config", help="path to configuration file", required=True)
+    parser.add_argument("--data_config", required=True)
+    parser.add_argument("--task_config", required=True)
     args = parser.parse_args()
-    with open(args.config) as config_file:
-        config = json.load(config_file)
-    for key, val in config.items():
-        logger.info(f"{key}: {val}")
+
+    with open(args.data_config) as data_config_file:
+        data_config = json.load(data_config_file)
+    with open(args.task_config) as task_config_file:
+        task_config = json.load(task_config_file)
+    for key, val in task_config.items():
+        logger.info(f"{key}: {val}")  # log hyperparams
+    config = {**data_config, **task_config}
     
     # Instantiate base model and tokenizer
-    base_model = load_model(config["model_name"])
+    base_model = load_model(task_config["model_name"])
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     tokenizer = AutoTokenizer.from_pretrained(config["model_name"])
 
@@ -126,7 +130,6 @@ def main():
     run_training(
             device=device,
             log_steps=config["log_steps"],
-            lr=config["lr"],
             model=peft_model,
             optimizer=optimizer,
             num_epochs=config["num_epochs"],

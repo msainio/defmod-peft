@@ -1,0 +1,10 @@
+{
+    "batch_size": 32,
+    "do_eval": 0,
+    "log_steps": 2000,
+    "lr": 5e-5,
+    "max_length": 96,
+    "model_name": "TurkuNLP/gpt3-finnish-large",
+    "num_epochs": 1,
+    "num_virtual_tokens": 4
+}

@@ -1,0 +1,15 @@
+{
+    "base_model": "TurkuNLP/gpt3-finnish-large",
+    "batch_size": 32,
+    "do_eval": 1,
+    "do_sample": 1,
+    "early_stopping": 0,
+    "log_steps": 200,
+    "low_memory": 0,
+    "max_length": 96,
+    "max_new_tokens": 32,
+    "num_beams": 1,
+    "peft_model": "models/23799316-train-fingpt",
+    "repetition_penalty": 1.0,
+    "temperature": 1.0
+}
