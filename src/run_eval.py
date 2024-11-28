@@ -68,15 +68,15 @@ def main():
         model_type = "TurkuNLP/bert-base-finnish-uncased-v1"
     num_layers = bert_score.utils.model2layers["bert-base-uncased"]
 
-    for i in range(len(preds)):
-        res = sacrebleu.compute(predictions=[preds[i]], references=[refs[i]])
-        scores["sacrebleu"].append(res["score"])
-    scores["rouge_l"] = rouge.compute(
-            predictions=preds, references=refs,
-            use_aggregator=False)["rougeL"]
     scores["bertscore_f1"] = bertscore.compute(
             predictions=preds, references=refs,
             model_type=model_type, num_layers=num_layers)["f1"]
+    scores["rouge_l"] = rouge.compute(
+            predictions=preds, references=refs,
+            use_aggregator=False)["rougeL"]
+    for i in range(len(preds)):
+        res = sacrebleu.compute(predictions=[preds[i]], references=[refs[i]])
+        scores["sacrebleu"].append(res["score"])
 
     scores_df = pd.DataFrame(scores)
     scores_df.to_csv(scores_path, index=False)
