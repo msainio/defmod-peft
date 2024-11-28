@@ -67,6 +67,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument( "--data_config", required=True)
     parser.add_argument( "--task_config", required=True)
+    parser.add_argument("--peft_model", required=True)
     args = parser.parse_args()
 
     with open(args.data_config) as data_config_file:
@@ -82,7 +83,7 @@ def main():
     prompt_templates_path = "config/prompt_templates.json"
 
     # Instantiate PEFT model and tokenizer
-    model = load_model(config["peft_model"])
+    model = load_model(args.peft_model)
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     tokenizer = AutoTokenizer.from_pretrained(
             config["base_model"], padding_side="left")

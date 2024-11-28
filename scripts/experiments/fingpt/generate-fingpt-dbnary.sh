@@ -17,4 +17,5 @@ export HF_HOME=".cache/huggingface"
 
 srun python3 src/generate.py \
     --data_config config/data/dbnary.json \
-    --task_config config/experiments/generate_fingpt.json
+    --task_config config/experiments/generate_fingpt.json \
+    --peft_model models/24423482-train-fingpt-dbnary

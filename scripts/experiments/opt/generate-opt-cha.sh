@@ -17,4 +17,5 @@ export HF_HOME=".cache/huggingface"
 
 srun python3 src/generate.py \
     --data_config config/data/cha.json \
-    --task_config config/experiments/generate_opt.json
+    --task_config config/experiments/generate_opt.json \
+    --peft_model models/24205379-train-opt-cha

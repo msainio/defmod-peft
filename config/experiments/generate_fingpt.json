@@ -9,7 +9,6 @@
     "max_length": 96,
     "max_new_tokens": 32,
     "num_beams": 1,
-    "peft_model": "models/23799316-train-fingpt",
     "repetition_penalty": 1.0,
     "temperature": 1.0
 }

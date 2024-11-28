@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --account=project_2007780
-#SBATCH --job-name=train-fingpt-dbnary-test
+#SBATCH --job-name=generate-opt-codwoe
 #SBATCH --output=./io/%j-%x.out
 #SBATCH --partition=gputest
 #SBATCH --gres=gpu:v100:1
@@ -12,9 +12,10 @@
 #SBATCH --mail-type=ALL
 
 module purge
-module load pytorch/2.3
+module load pytorch/2.4
 export HF_HOME=".cache/huggingface"
 
-srun python3 src/train.py \
-    --data_config config/data/dbnary.json \
-    --task_config config/experiments/train_fingpt.json
+srun python3 src/generate.py \
+    --data_config config/data/codwoe.json \
+    --task_config config/experiments/generate_opt.json \
+    --peft_model models/24455636-train-opt-codwoe

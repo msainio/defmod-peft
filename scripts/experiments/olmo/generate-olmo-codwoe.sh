@@ -17,4 +17,5 @@ export HF_HOME=".cache/huggingface"
 
 srun python3 src/generate.py \
     --data_config config/data/codwoe.json \
-    --task_config config/experiments/generate_olmo.json
+    --task_config config/experiments/generate_olmo.json \
+    --peft_model models/24210969-train-olmo-codwoe
