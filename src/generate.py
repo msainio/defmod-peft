@@ -63,7 +63,7 @@ def main():
             level=logging.INFO)
     logger.info(f"{job_id}-{job_name}")
 
-    # Load program configuration from file
+    # Load program configuration and model from files
     parser = argparse.ArgumentParser()
     parser.add_argument( "--data_config", required=True)
     parser.add_argument( "--task_config", required=True)
