@@ -123,7 +123,7 @@ def main():
 
     # Write predictions to file
     test_data[config["colname_pred"]] = preds
-    test_data.to_csv(preds_path)
+    test_data.to_csv(preds_path, index=False)
     logger.info(f"Predictions saved to '{preds_path}'")
  
 if __name__ == "__main__":

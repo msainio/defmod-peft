@@ -1,9 +1,11 @@
 /.cache/
+/.venv/
 /data/
 /io/
 /logs/
 /models/
 /preds/
+/scores/
 /results/
 /runs/
 __pycache__/
