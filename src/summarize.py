@@ -5,7 +5,7 @@ import pandas as pd
 import sys
 
 def main():
-    results = pd.read_csv(sys.argv[1])
+    results = pd.read_csv(sys.argv[1], lineterminator="\n")
     summary = {
             "metric": ["sacrebleu", "rouge_l", "bertscore_f1"],
             "mean": [],

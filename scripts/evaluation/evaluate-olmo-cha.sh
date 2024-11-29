@@ -6,9 +6,9 @@
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --time=0-4
+#SBATCH --time=0-2
 #SBATCH --mail-type=ALL
 
 module purge
