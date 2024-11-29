@@ -1,25 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
-import bert_score
-import evaluate
+from bert_score import BERTScorer
 import json
 import numpy as np
 import os
 import pandas as pd
-import re
-
-def remove_prompt(row, colname_pred, colname_word, data_lang):
-    if data_lang == "en":
-        pattern = rf"What is the definition of {row[colname_word]}\??(.*)"
-    elif data_lang == "fi":
-        pattern = rf"Mikä on sanan {row[colname_word]} määritelmä\??(.*)"
-    after_prompt = re.findall(pattern, row[colname_pred])
-    # Some preds are so long that they do not contain the prompt
-    if after_prompt:
-        return after_prompt[0]
-    else:
-        return row[colname_pred]
+from rouge_score.rouge_scorer import RougeScorer
+from sacrebleu.metrics import BLEU, CHRF
 
 def main():
     job_id = os.environ["SLURM_JOB_ID"]
@@ -42,10 +30,7 @@ def main():
     scores_path = f"scores/{job_id}-{job_name}.csv"
 
     data = pd.read_csv(preds_path, lineterminator="\n")
-    preds = data.apply(
-            remove_prompt, axis=1,
-            args=(colname_pred, colname_word, data_lang)
-            ).to_list()
+    preds = data[colname_pred].to_list()
     refs = data[data_config["colname_def"]].to_list()
 
     scores = {
@@ -53,14 +38,11 @@ def main():
             "example": data[colname_ex],
             "gloss": data[colname_def],
             "prediction": data[colname_pred],
-            "sacrebleu": [],
-            "rouge_l": [],
-            "bertscore_f1": [],
+            "chrF++": [],
+            "bleu": [],
+            "rougeL": [],
+            "bert_score_F1": [],
             }
-
-    sacrebleu = evaluate.load("sacrebleu")
-    rouge = evaluate.load("rouge")
-    bertscore = evaluate.load("bertscore")
 
     if data_lang == "en":
         model_type = "google-bert/bert-base-uncased"
@@ -68,15 +50,21 @@ def main():
         model_type = "TurkuNLP/bert-base-finnish-uncased-v1"
     num_layers = bert_score.utils.model2layers["bert-base-uncased"]
 
-    scores["bertscore_f1"] = bertscore.compute(
-            predictions=preds, references=refs,
-            model_type=model_type, num_layers=num_layers)["f1"]
-    scores["rouge_l"] = rouge.compute(
-            predictions=preds, references=refs,
-            use_aggregator=False)["rougeL"]
+    chrf = CHRF(word_order=2)
+    bleu = BLEU()
+    rouge = RougeScorer(["rougeL"])
+    bert_score = BERTScorer(model_type=model_type, num_layers=num_layers)
+
     for i in range(len(preds)):
-        res = sacrebleu.compute(predictions=[preds[i]], references=[refs[i]])
-        scores["sacrebleu"].append(res["score"])
+        pred = preds[i]
+        ref = refs[i]
+        scores["chrF++"].append(
+                chrf.sentence_score(hypothesis=pred, references=ref))
+        scores["bleu"].append(
+                bleu.sentence_score(hypothesis=pred, references=ref))
+        scores["rougeL"].append(
+                rouge.score(prediction=pred, target=ref))
+    scores["bert_score_F1"] = bert_score.score(preds, refs)[-1]
 
     scores_df = pd.DataFrame(scores)
     scores_df.to_csv(scores_path, index=False)
