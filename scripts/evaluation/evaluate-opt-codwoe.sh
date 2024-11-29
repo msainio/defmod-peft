@@ -2,7 +2,7 @@
 
 #SBATCH --account=project_2007780
 #SBATCH --job-name=evaluate-opt-codwoe
-#SBATCH --output=./io/%j-%x.out
+#SBATCH --output=./stdio/%j-%x.out
 #SBATCH --partition=gputest
 #SBATCH --gres=gpu:v100:1
 #SBATCH --ntasks=1
