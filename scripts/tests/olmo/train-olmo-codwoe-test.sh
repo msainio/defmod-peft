@@ -6,7 +6,7 @@
 #SBATCH --partition=gputest
 #SBATCH --gres=gpu:v100:1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=10
+#SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=4G
 #SBATCH --time=15
 #SBATCH --mail-type=ALL
