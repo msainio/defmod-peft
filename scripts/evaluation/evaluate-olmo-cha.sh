@@ -3,12 +3,12 @@
 #SBATCH --account=project_2007780
 #SBATCH --job-name=evaluate-olmo-cha
 #SBATCH --output=./stdio/%j-%x.out
-#SBATCH --partition=gpu
+#SBATCH --partition=small
 #SBATCH --gres=gpu:v100:1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --time=0-2
+#SBATCH --time=0-4
 #SBATCH --mail-type=ALL
 
 module purge

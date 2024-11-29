@@ -3,12 +3,12 @@
 #SBATCH --account=project_2007780
 #SBATCH --job-name=evaluate-fingpt-dbnary
 #SBATCH --output=./stdio/%j-%x.out
-#SBATCH --partition=gputest
+#SBATCH --partition=small
 #SBATCH --gres=gpu:v100:1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --time=15
+#SBATCH --time=0-1
 #SBATCH --mail-type=ALL
 
 module purge
