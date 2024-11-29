@@ -17,9 +17,8 @@ logger = logging.getLogger(__name__)
 def load_model(model_name):
     start_time = datetime.now()
     model = AutoModelForCausalLM.from_pretrained(model_name)
-    logger.info(
-            "Base model loaded in" + " "
-            + str(datetime.now() - start_time))
+    load_time = str(datetime.now() - start_time)
+    logger.info(f"Base model loaded in {load_time}")
     return model
 
 @torch.no_grad
@@ -66,13 +65,12 @@ def run_training(
         # Evaluate and log results
         train_loss, train_ppl, val_loss, val_ppl = run_eval(
                 model, val_loader, device, total_loss, train_loader)
+        epoch_time = str(datetime.now() - epoch_start)
         logger.info(f"{train_loss=:.3f}, {train_ppl=:.3f}")
         logger.info(f"{val_loss=:.3f}, {val_ppl=:.3f}")
-        logger.info(f"Epoch {epoch + 1} finished in" + " "
-                + str(datetime.now() - epoch_start)
-                )
-    logger.info("Training finished in" + " "
-            + str(datetime.now() - train_start))
+        logger.info(f"Epoch {epoch + 1} finished in {epoch_time}")
+    train_time = str(datetime.now() - train_start)
+    logger.info(f"Training finished in {train_time}")
 
 def main():
     # Configure logger
@@ -80,7 +78,8 @@ def main():
     job_name = os.environ["SLURM_JOB_NAME"]
     logging.basicConfig(
             filename=f"logs/{job_id}-{job_name}.log",
-            level=logging.INFO)
+            level=logging.INFO
+            )
     logger.info(f"{job_id}-{job_name}")
 
     # Load program configuration from file

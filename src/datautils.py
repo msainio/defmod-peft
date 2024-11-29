@@ -38,15 +38,15 @@ def _get_labels(model_inputs, pad_token_id):
     return labels
 
 def _get_model_inputs(
-        colname_def, colname_ex, colname_word, data, do_eval, max_length,
-        data_lang, prompt_templates, tokenizer):
+        batch_size, colname_def, colname_ex, colname_word, data, do_eval,
+        max_length, data_lang, prompt_templates, tokenizer):
     eos_token = tokenizer.eos_token
     input_texts = _get_input_texts(
             colname_def, colname_ex, colname_word, data, do_eval, eos_token,
             data_lang, prompt_templates)
     model_inputs = tokenizer(
             max_length=max_length,
-            padding="max_length",
+            padding=False if batch_size == 1 else "max_length",
             return_tensors="pt",
             text=input_texts,
             truncation=True,
@@ -61,7 +61,8 @@ def _prepare_dataset(
     data = pd.read_csv(filepath)
     model_inputs = _get_model_inputs(
             colname_def, colname_ex, colname_word, data, do_eval, max_length,
-            data_lang, prompt_templates, tokenizer)
+            data_lang, prompt_templates, tokenizer
+            )
     dataset = TensorDataset(
             model_inputs["input_ids"],
             model_inputs["attention_mask"],

@@ -15,43 +15,36 @@ logger = logging.getLogger(__name__)
 def load_model(model_name):
     start_time = datetime.now()
     model = AutoPeftModelForCausalLM.from_pretrained(model_name)
-    logger.info(
-            "PEFT model loaded in" + " "
-            + str(datetime.now() - start_time))
+    load_time = str(datetime.now() - start_time)
+    logger.info(f"PEFT model loaded in {load_time}")
     return model
 
 @torch.no_grad
 def run_generation(
-        device, do_sample, early_stopping, log_steps, low_memory,
-        max_new_tokens, model, num_beams, repetition_penalty, temperature,
-        test_loader, tokenizer):
+        device, gen_kwargs, log_steps, model, test_loader, tokenizer):
     gen_start = datetime.now()
     logger.info("Generation started")
     model.eval()
     preds = []
     for step, batch in enumerate(test_loader):
+        prompt_texts = tokenizer.batch_decode(
+                batch[0], skip_special_tokens=True)
+        prompt_lengths = [len(text) for text in prompt_texts]
         inp = batch[0].to(device)
         att = batch[1].to(device)
         outputs = model.generate(
-            attention_mask=att,
-            do_sample=do_sample,
-            early_stopping=early_stopping,
-            input_ids=inp,
-            low_memory=low_memory,
-            max_new_tokens=max_new_tokens,
-            num_beams=num_beams,
-            repetition_penalty=repetition_penalty,
-            temperature=temperature,
-            )
+                attention_mask=att, input_ids=inp, **gen_kwargs)
         decoded_outputs = tokenizer.batch_decode(
             outputs.detach().cpu().numpy(),
-            skip_special_tokens=True,
+            skip_special_tokens=True
             )
-        preds += decoded_outputs
+        for i in range(len(decoded_outputs)):
+            p_len = prompt_lengths[i]
+            preds.append(decoded_outputs[i][p_len:])
         if (step + 1) % log_steps == 0 or (step + 1) == len(test_loader):
                 logger.info(f"{step + 1}/{len(test_loader)}")
-    logger.info("Generation finished in" + " "
-            + str(datetime.now() - gen_start))
+    gen_time = str(datetime.now() - gen_start)
+    logger.info(f"Generation finished in {gen_time}")
     return preds
 
 def main():
@@ -60,7 +53,8 @@ def main():
     job_name = os.environ["SLURM_JOB_NAME"]
     logging.basicConfig(
             filename=f"logs/{job_id}-{job_name}.log",
-            level=logging.INFO)
+            level=logging.INFO
+            )
     logger.info(f"{job_id}-{job_name}")
 
     # Load program configuration and model from files
@@ -105,21 +99,23 @@ def main():
     device = (torch.device("cuda") if torch.cuda.is_available()
             else torch.device("cpu"))
     model.to(device)
-
+    gen_kwargs = {
+            "do_sample": True if config["do_sample"] else False,
+            "early_stopping": True if config["early_stopping"] else False,
+            "low_memory": True if config["low_memory"] else False,
+            "max_new_tokens": config["max_new_tokens"],
+            "num_beams": config["num_beams"],
+            "repetition_penalty": config["repetition_penalty"],
+            "temperature": config["temperature"],
+            }
     preds = run_generation(
-        device=device,
-        do_sample=True if config["do_sample"] else False,
-        early_stopping=True if config["early_stopping"] else False,
-        log_steps=config["log_steps"],
-        low_memory=True if config["low_memory"] else False,
-        max_new_tokens=config["max_new_tokens"],
-        model=model,
-        num_beams=config["num_beams"],
-        repetition_penalty=config["repetition_penalty"],
-        temperature=config["temperature"],
-        test_loader=test_loader,
-        tokenizer=tokenizer,
-        )
+            device=device,
+            gen_kwargs=gen_kwargs,
+            log_steps=config["log_steps"],
+            model=model,
+            test_loader=test_loader,
+            tokenizer=tokenizer,
+            )
 
     # Write predictions to file
     test_data[config["colname_pred"]] = preds
