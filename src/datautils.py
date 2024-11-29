@@ -60,8 +60,8 @@ def _prepare_dataset(
         shuffle, tokenizer):
     data = pd.read_csv(filepath)
     model_inputs = _get_model_inputs(
-            colname_def, colname_ex, colname_word, data, do_eval, max_length,
-            data_lang, prompt_templates, tokenizer
+            batch_size, colname_def, colname_ex, colname_word, data, do_eval,
+            max_length, data_lang, prompt_templates, tokenizer
             )
     dataset = TensorDataset(
             model_inputs["input_ids"],
