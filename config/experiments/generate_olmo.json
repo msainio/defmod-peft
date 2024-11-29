@@ -1,6 +1,6 @@
 {
     "base_model": "allenai/OLMo-1B-hf",
-    "batch_size": 32,
+    "batch_size": 1,
     "do_eval": 1,
     "do_sample": 1,
     "early_stopping": 0,
