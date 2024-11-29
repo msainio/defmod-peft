@@ -6,6 +6,7 @@ from datetime import datetime
 import json
 import logging
 import os
+import pandas as pd
 from peft import AutoPeftModelForCausalLM
 import torch
 from transformers import AutoTokenizer
@@ -21,12 +22,15 @@ def load_model(model_name):
 
 @torch.no_grad
 def run_generation(
-        device, gen_kwargs, log_steps, model, test_loader, tokenizer):
+        batch_size, device, gen_kwargs, log_steps, model, test_loader,
+        tokenizer):
     gen_start = datetime.now()
     logger.info("Generation started")
     model.eval()
     preds = []
     for step, batch in enumerate(test_loader):
+        if not isinstance(batch, torch.Tensor):
+            batch = torch.tensor(batch)
         prompt_texts = tokenizer.batch_decode(
                 batch[0], skip_special_tokens=True)
         prompt_lengths = [len(text) for text in prompt_texts]
@@ -39,6 +43,7 @@ def run_generation(
             skip_special_tokens=True
             )
         for i in range(len(decoded_outputs)):
+            # Exclude prompt from stored output
             p_len = prompt_lengths[i]
             preds.append(decoded_outputs[i][p_len:])
         if (step + 1) % log_steps == 0 or (step + 1) == len(test_loader):
@@ -72,7 +77,6 @@ def main():
         logger.info(f"{key}: {val}")
     config = {**data_config, **task_config}
 
-    colname_pred = "prediction"
     preds_path=f"preds/{job_id}-{job_name}.csv"
     prompt_templates_path = "config/prompt_templates.json"
 
@@ -109,6 +113,7 @@ def main():
             "temperature": config["temperature"],
             }
     preds = run_generation(
+            batch_size=config["batch_size"],
             device=device,
             gen_kwargs=gen_kwargs,
             log_steps=config["log_steps"],
@@ -118,8 +123,15 @@ def main():
             )
 
     # Write predictions to file
-    test_data[colname_pred] = preds
-    test_data.to_csv(preds_path, index=False)
+    df_preds = pd.DataFrame(
+            {
+                "word": test_data[config["colname_word"]],
+                "example": test_data[config["colname_ex"]],
+                "target": test_data[config["colname_def"]],
+                "prediction": preds
+                }
+            )
+    df_preds.to_csv(preds_path, index=False)
     logger.info(f"Predictions saved to '{preds_path}'")
  
 if __name__ == "__main__":

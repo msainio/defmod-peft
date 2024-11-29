@@ -1,6 +1,6 @@
 {
     "base_model": "facebook/opt-2.7b",
-    "batch_size": 32,
+    "batch_size": 1,
     "do_eval": 1,
     "do_sample": 1,
     "early_stopping": 0,

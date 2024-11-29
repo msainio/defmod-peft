@@ -9,6 +9,7 @@ def _fill_prompt_template(
         row, colname_def, colname_ex, colname_word, do_eval, eos_token,
         template):
     if do_eval:
+        # Exclude target gloss
         prompt = template.format(
                 example=row[colname_ex],
                 word=row[colname_word]
@@ -47,11 +48,13 @@ def _get_model_inputs(
     model_inputs = tokenizer(
             max_length=max_length,
             padding=False if batch_size == 1 else "max_length",
-            return_tensors="pt",
+            return_tensors=None if batch_size == 1 else "pt",
             text=input_texts,
             truncation=True,
             )
-    model_inputs["labels"] = _get_labels(model_inputs, tokenizer.pad_token_id)
+    if isinstance(model_inputs, torch.Tensor):
+        model_inputs["labels"] = _get_labels(
+                model_inputs, tokenizer.pad_token_id)
     return model_inputs
 
 def _prepare_dataset(
@@ -63,18 +66,23 @@ def _prepare_dataset(
             batch_size, colname_def, colname_ex, colname_word, data, do_eval,
             max_length, data_lang, prompt_templates, tokenizer
             )
-    dataset = TensorDataset(
-            model_inputs["input_ids"],
-            model_inputs["attention_mask"],
-            model_inputs["labels"],
-            )
-    dataloader = DataLoader(
-            batch_size=batch_size,
-            dataset=dataset,
-            num_workers=num_workers,
-            pin_memory=pin_memory,
-            shuffle=shuffle,
-            )
+    if not isinstance(model_inputs, torch.Tensor):
+        inp = model_inputs["input_ids"]
+        att = model_inputs["attention_mask"]
+        dataloader = [[[inp[i]], [att[i]]] for i in range(len(inp))]
+    else:
+        dataset = TensorDataset(
+                model_inputs["input_ids"],
+                model_inputs["attention_mask"],
+                model_inputs["labels"],
+                )
+        dataloader = DataLoader(
+                batch_size=batch_size,
+                dataset=dataset,
+                num_workers=num_workers,
+                pin_memory=pin_memory,
+                shuffle=shuffle,
+                )
     return data, dataloader
 
 def prepare_datasets(

@@ -3,6 +3,7 @@
 import argparse
 from bert_score import BERTScorer
 import json
+import logging
 import numpy as np
 import os
 import pandas as pd
@@ -12,6 +13,11 @@ from sacrebleu.metrics import BLEU, CHRF
 def main():
     job_id = os.environ["SLURM_JOB_ID"]
     job_name = os.environ["SLURM_JOB_NAME"]
+    logging.basicConfig(
+            filename=f"logs/{job_id}-{job_name}.log",
+            level=logging.INFO
+            )
+    logger.info(f"{job_id}-{job_name}")
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_config", "-d", required=True)
@@ -28,6 +34,8 @@ def main():
     data_lang = data_config["data_lang"]
     preds_path = args.predictions
     scores_path = f"scores/{job_id}-{job_name}.csv"
+
+    logger.info(f"predictions: {preds_path}")
 
     data = pd.read_csv(preds_path, lineterminator="\n")
     preds = data[colname_pred].to_list()
@@ -55,6 +63,8 @@ def main():
     rouge = RougeScorer(["rougeL"])
     bert_score = BERTScorer(model_type=model_type, num_layers=num_layers)
 
+    logger.info("Evaluation started")
+    logger.info("Computing character and token scores")
     for i in range(len(preds)):
         pred = preds[i]
         ref = refs[i]
@@ -64,10 +74,12 @@ def main():
                 bleu.sentence_score(hypothesis=pred, references=ref))
         scores["rougeL"].append(
                 rouge.score(prediction=pred, target=ref))
+    logger.info("Computing BERTScore")
     scores["bert_score_F1"] = bert_score.score(preds, refs)[-1]
 
     scores_df = pd.DataFrame(scores)
     scores_df.to_csv(scores_path, index=False)
+    logger.info("Scores saved to '{scores_path}'")
 
 if __name__ == "__main__":
     main()
