@@ -35,7 +35,7 @@ def main():
 
     colname_def = data_config["colname_def"]
     colname_ex = data_config["colname_ex"]
-    colname_pred = data_config["colname_pred"]
+    colname_pred = "prediction"
     colname_word = data_config["colname_word"]
     data_lang = data_config["data_lang"]
     preds_path = args.predictions

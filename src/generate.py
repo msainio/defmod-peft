@@ -72,7 +72,7 @@ def main():
         logger.info(f"{key}: {val}")
     config = {**data_config, **task_config}
 
-    # Set paths
+    colname_pred = "prediction"
     preds_path=f"preds/{job_id}-{job_name}.csv"
     prompt_templates_path = "config/prompt_templates.json"
 
@@ -118,7 +118,7 @@ def main():
             )
 
     # Write predictions to file
-    test_data[config["colname_pred"]] = preds
+    test_data[colname_pred] = preds
     test_data.to_csv(preds_path, index=False)
     logger.info(f"Predictions saved to '{preds_path}'")
  

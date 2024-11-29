@@ -1,7 +1,6 @@
 {
     "colname_def": "DEFINITION",
     "colname_ex": "EXAMPLE",
-    "colname_pred": "PREDICTION",
     "colname_word": "WORD",
     "data_lang": "en",
     "test_file": "data/cha/CHA_test_mini.csv",

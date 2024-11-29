@@ -1,7 +1,6 @@
 {
     "colname_def": "gloss",
     "colname_ex": "example",
-    "colname_pred": "prediction",
     "colname_word": "word",
     "data_lang": "en",
     "test_file": "data/codwoe/test.csv",
