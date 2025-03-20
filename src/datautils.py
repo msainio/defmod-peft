@@ -25,12 +25,12 @@ def _fill_prompt_template(
 def _get_input_texts(
         colname_def, colname_ex, colname_word, data, do_eval, eos_token,
         data_lang, prompt_templates):
-    string_data = data.map(lambda x: str(x))
+    data = data.map(lambda x: str(x))
     task = "generate" if do_eval else "train"
     template = prompt_templates[data_lang][task]
     args = (colname_def, colname_ex, colname_word,
             do_eval, eos_token, template)
-    input_texts = string_data.apply(_fill_prompt_template, axis=1, args=args)
+    input_texts = data.apply(_fill_prompt_template, axis=1, args=args)
     return input_texts.to_list()
 
 def _get_labels(model_inputs, pad_token_id):

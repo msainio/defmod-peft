@@ -7,7 +7,7 @@ import sys
 def main():
     results = pd.read_csv(sys.argv[1], lineterminator="\n")
     summary = {
-            "metric": ["sacrebleu", "rouge_l", "bertscore_f1"],
+            "metric": ["chrF++", "bleu", "rougeL", "bertF1"],
             "mean": [],
             "std": []
             }

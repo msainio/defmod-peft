@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import bert_score
 from bert_score import BERTScorer
 import json
 import logging
@@ -9,6 +10,8 @@ import os
 import pandas as pd
 from rouge_score.rouge_scorer import RougeScorer
 from sacrebleu.metrics import BLEU, CHRF
+
+logger = logging.getLogger(__name__)
 
 def main():
     job_id = os.environ["SLURM_JOB_ID"]
@@ -27,10 +30,10 @@ def main():
     with open(args.data_config) as data_config_file:
         data_config = json.load(data_config_file)
 
-    colname_def = data_config["colname_def"]
-    colname_ex = data_config["colname_ex"]
+    colname_def = "target"
+    colname_ex = "example"
     colname_pred = "prediction"
-    colname_word = data_config["colname_word"]
+    colname_word = "word"
     data_lang = data_config["data_lang"]
     preds_path = args.predictions
     scores_path = f"scores/{job_id}-{job_name}.csv"
@@ -38,18 +41,19 @@ def main():
     logger.info(f"predictions: {preds_path}")
 
     data = pd.read_csv(preds_path, lineterminator="\n")
+    data = data.map(lambda x: str(x))
     preds = data[colname_pred].to_list()
-    refs = data[data_config["colname_def"]].to_list()
+    refs = data[colname_def].to_list()
 
     scores = {
             "word": data[colname_word],
             "example": data[colname_ex],
-            "gloss": data[colname_def],
+            "target": data[colname_def],
             "prediction": data[colname_pred],
             "chrF++": [],
             "bleu": [],
             "rougeL": [],
-            "bert_score_F1": [],
+            "bertF1": [],
             }
 
     if data_lang == "en":
@@ -58,28 +62,34 @@ def main():
         model_type = "TurkuNLP/bert-base-finnish-uncased-v1"
     num_layers = bert_score.utils.model2layers["bert-base-uncased"]
 
-    chrf = CHRF(word_order=2)
-    bleu = BLEU()
-    rouge = RougeScorer(["rougeL"])
-    bert_score = BERTScorer(model_type=model_type, num_layers=num_layers)
+    chrf_scorer = CHRF(word_order=2)
+    bleu_scorer = BLEU(effective_order=True)
+    rouge_scorer = RougeScorer(["rougeL"])
+    bert_scorer = BERTScorer(model_type=model_type, num_layers=num_layers)
 
     logger.info("Evaluation started")
-    logger.info("Computing character and token scores")
+    logger.info("Computing character- and token-based metrics")
     for i in range(len(preds)):
         pred = preds[i]
         ref = refs[i]
         scores["chrF++"].append(
-                chrf.sentence_score(hypothesis=pred, references=ref))
+                chrf_scorer.sentence_score(
+                    hypothesis=pred, references=[ref]).score
+                )
         scores["bleu"].append(
-                bleu.sentence_score(hypothesis=pred, references=ref))
+                bleu_scorer.sentence_score(
+                    hypothesis=pred, references=[ref]).score
+                )
         scores["rougeL"].append(
-                rouge.score(prediction=pred, target=ref))
+                rouge_scorer.score(
+                    prediction=pred, target=ref)["rougeL"].fmeasure
+                )
     logger.info("Computing BERTScore")
-    scores["bert_score_F1"] = bert_score.score(preds, refs)[-1]
+    scores["bertF1"] = bert_scorer.score(preds, refs)[-1]
 
     scores_df = pd.DataFrame(scores)
     scores_df.to_csv(scores_path, index=False)
-    logger.info("Scores saved to '{scores_path}'")
+    logger.info(f"Scores saved to '{scores_path}'")
 
 if __name__ == "__main__":
     main()

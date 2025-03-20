@@ -3,12 +3,12 @@
 #SBATCH --account=project_2007780
 #SBATCH --job-name=generate-olmo-codwoe
 #SBATCH --output=./stdio/%j-%x.out
-#SBATCH --partition=gputest
+#SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=2G
-#SBATCH --time=15
+#SBATCH --time=0-1
 #SBATCH --mail-type=ALL
 
 module purge

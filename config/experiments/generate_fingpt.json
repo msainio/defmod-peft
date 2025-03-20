@@ -4,7 +4,7 @@
     "do_eval": 1,
     "do_sample": 1,
     "early_stopping": 0,
-    "log_steps": 200,
+    "log_steps": 2000,
     "low_memory": 0,
     "max_length": 96,
     "max_new_tokens": 32,
