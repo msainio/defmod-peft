@@ -16,4 +16,4 @@ source .venv/bin/activate
 
 srun python3 src/run_eval.py \
     --predictions preds/24611850-generate-olmo-cha.csv \
-    --data_config config/data/cha.json
+    --data_config config/datasets/cha.json

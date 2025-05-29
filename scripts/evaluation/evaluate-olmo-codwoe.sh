@@ -16,4 +16,4 @@ source .venv/bin/activate
     
 srun python3 src/run_eval.py \
     --predictions preds/24611786-generate-olmo-codwoe.csv \
-    --data_config config/data/codwoe.json
+    --data_config config/datasets/codwoe.json

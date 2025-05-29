@@ -16,5 +16,5 @@ module load pytorch/2.3
 export HF_HOME=".cache/huggingface"
 
 srun python3 src/train.py \
-    --data_config config/data/dbnary.json
+    --data_config config/datasets/dbnary.json
     --task_config config/experiments/train_fingpt.json

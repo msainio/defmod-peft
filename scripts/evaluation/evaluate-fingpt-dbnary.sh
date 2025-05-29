@@ -16,4 +16,4 @@ source .venv/bin/activate
 
 srun python3 src/run_eval.py \
     --predictions preds/24611499-generate-fingpt-dbnary.csv \
-    --data_config config/data/dbnary.json
+    --data_config config/datasets/dbnary.json

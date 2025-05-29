@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --account=project_2007780
-#SBATCH --job-name=generate-opt-cha-test
+#SBATCH --job-name=train-fingpt-dbnary-debug
 #SBATCH --output=./stdio/%j-%x.out
 #SBATCH --partition=gputest
 #SBATCH --gres=gpu:v100:1
@@ -12,10 +12,9 @@
 #SBATCH --mail-type=ALL
 
 module purge
-module load pytorch/2.4
+module load pytorch/2.3
 export HF_HOME=".cache/huggingface"
 
-srun python3 src/generate.py \
-    --data_config config/data/cha_mini.json \
-    --task_config config/tests/generate_opt_test.json \
-    --peft_model models/24205379-train-opt-cha
+srun python3 src/train.py \
+    --data_config config/datasets/dbnary.json \
+    --task_config config/experiments/train_fingpt.json
