@@ -56,9 +56,11 @@ def main():
             sample_to_annotate = pd.concat([sample_to_annotate, addl_sample])
             iter_state += 1
 
-        sample_to_annotate[
-                ["word", "example", "target", "prediction"]
-                ].to_csv(f"annotation/{key}_only_text.csv", index=False)
+        sample_to_annotate["fluent"] = ""
+        sample_to_annotate["correct"] = ""
+        sample_to_annotate.select_dtypes(exclude="number").to_csv(
+                f"annotation/{key}_only_text.csv", index=False,
+                )
         sample_to_annotate.to_csv(f"annotation/{key}_scores.csv", index=False)
 
 
